@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VEET IA • Inteligencia Artificial Soberana</title>
+
+  <meta name="description" content="VEET IA es una inteligencia artificial soberana experta en Bot Designer For Discord (BDFD)." />
+  <meta name="theme-color" content="#0b0f14" />
+
+  <style>
+    * { box-sizing: border-box; font-family: Arial, sans-serif; }
+    body {
+      margin: 0;
+      background: linear-gradient(145deg, #0b0f14, #020409);
+      color: #fff;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .app {
+      width: 100%;
+      max-width: 1200px;
+      height: 90vh;
+      background: #0f172a;
+      border-radius: 16px;
+      display: flex;
+      overflow: hidden;
+      box-shadow: 0 0 40px rgba(0,0,0,.6);
+    }
+    .sidebar {
+      width: 320px;
+      background: #020617;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid #1e293b;
+    }
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    textarea {
+      flex: 1;
+      resize: none;
+      background: #020617;
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      padding: 12px;
+      color: #fff;
+    }
+    button {
+      margin-top: 12px;
+      background: #2563eb;
+      border: none;
+      border-radius: 8px;
+      padding: 12px;
+      color: white;
+      cursor: pointer;
+    }
+    .main {
+      flex: 1;
+      background: #020409;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+    pre {
+      flex: 1;
+      background: #020617;
+      border-radius: 12px;
+      padding: 16px;
+      overflow: auto;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app">
+  <div class="sidebar">
+    <div class="logo">VEET IA</div>
+    <textarea id="prompt" placeholder="Describe el comando BDFD..."></textarea>
+    <button onclick="send()">Generar</button>
+  </div>
+  <div class="main">
+    <pre id="output">// El código aparecerá aquí</pre>
+  </div>
+</div>
+
+<script>
+async function send() {
+  const prompt = document.getElementById("prompt").value;
+  const output = document.getElementById("output");
+  output.textContent = "Pensando...";
+
+  const res = await fetch("/api/generate/stream", {
+    method: "POST",
+    body: prompt
+  });
+
+  const reader = res.body.getReader();
+  output.textContent = "";
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    output.textContent += new TextDecoder().decode(value);
+  }
+}
+</script>
+
+</body>
+</html>

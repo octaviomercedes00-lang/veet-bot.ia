@@ -1,0 +1,1 @@
+{"instruction":"Crear sistema premium","output":"$onlyIf[$getUserVar[premium]==true;❌ Premium requerido]"}
